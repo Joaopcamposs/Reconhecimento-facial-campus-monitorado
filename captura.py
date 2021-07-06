@@ -25,7 +25,7 @@ while(True):
             amostra += 1
 
     cv2.imshow("Face", imagem)
-    #cv2.waitKey(1)
+    cv2.waitKey(1)
     if (amostra >= numeroAmostras + 1):
         break
 
