@@ -5,7 +5,7 @@ classificador = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
 cameraIP = cv2.VideoCapture('rtsp://joaop:Jp103266@192.168.0.107/') #cameraIP
 
 amostra = 1
-numeroAmostras = 25
+numeroAmostras = 20
 id = input('Digite seu identificador: ')
 largura, altura = 220, 220
 print("Capturando as faces...")
