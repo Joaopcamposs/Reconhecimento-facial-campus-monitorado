@@ -6,7 +6,7 @@ reconhecedor.read("classificadorLBPH.yml")
 largura, altura = 220, 220
 font = cv2.FONT_HERSHEY_COMPLEX_SMALL
 #cameraIP = cv2.VideoCapture(0) #WebCam
-cameraIP = cv2.VideoCapture('rtsp://joaop:Jp103266@192.168.0.107/') #CameraIP
+cameraIP = cv2.VideoCapture('rtsp://joaop:Jp103266@192.168.0.106/') #CameraIP
 
 while (True):
     conectado, imagem = cameraIP.read()

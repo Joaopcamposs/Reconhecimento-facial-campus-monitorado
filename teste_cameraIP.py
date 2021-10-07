@@ -1,6 +1,6 @@
 import cv2
 
-cap = cv2.VideoCapture('rtsp://joaop:Jp103266@192.168.0.107/')
+cap = cv2.VideoCapture('rtsp://joaop:Jp103266@192.168.0.101/')
 
 while True:
     ret, frame = cap.read()

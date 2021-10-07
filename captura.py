@@ -1,8 +1,8 @@
 import cv2
 
 classificador = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
-#cameraIP = cv2.VideoCapture(0) #WebCam
-cameraIP = cv2.VideoCapture('rtsp://joaop:Jp103266@192.168.0.107/') #cameraIP
+cameraIP = cv2.VideoCapture(0) #WebCam
+#cameraIP = cv2.VideoCapture('rtsp://joaop:Jp103266@192.168.0.101/') #cameraIP
 
 amostra = 1
 numeroAmostras = 20
