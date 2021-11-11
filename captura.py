@@ -7,8 +7,10 @@ cameraIP = cv2.VideoCapture(0) #WebCam
 amostra = 1
 numeroAmostras = 20
 id = input('Digite seu identificador: ')
+print(f'ID: {id}')
 largura, altura = 220, 220
 print("Capturando as faces...")
+print("Pressione 'q' para capturar a imagem")
 
 while(True):
     conectado, imagem = cameraIP.read()
@@ -21,7 +23,7 @@ while(True):
         if cv2.waitKey(1) & 0xFF == ord('q'): #tecla 'q' captura as fotos
             imagemFace = cv2.resize(imagemCinza[y:y + a, x:x + l], (largura, altura))
             cv2.imwrite("fotos/pessoa." + str(id) + "." + str(amostra) + ".jpg", imagemFace)
-            print("[Foto" + str(amostra) + " capturada com sucesso]")
+            print(f"[Foto {amostra} capturada com sucesso!]")
             amostra += 1
 
     cv2.imshow("Face", imagem)
