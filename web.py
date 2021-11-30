@@ -6,7 +6,7 @@ from time import sleep
 from banco_de_dados import get_db
 from crud import pegar_camera_por_id, pegar_todas_pessoas
 from models import EstadoCamera
-from sqlalchemy.orm import Session, session
+from sqlalchemy.orm import Session
 from crud import CameraNaoExiste
 
 ##Definir api
@@ -22,8 +22,8 @@ largura, altura = 220, 220
 
 
 # comando para iniciar o servidor da API
-# uvicorn web:app --workers 3
-# http://127.0.0.1:8000/video/1
+# uvicorn web:app --workers 4
+# http://127.0.0.1:8000/docs
 
 
 def verificarPessoa(session: Session, id: int):
@@ -38,6 +38,7 @@ def verificarPessoa(session: Session, id: int):
 
 async def stream_camera_ip(session: Session, id_camera: int):
     #Estanciar camera ip e pegar enderco
+    imagem = None
     camera = None
     try:
         camera = pegar_camera_por_id(session=session, _id=id_camera)
@@ -46,16 +47,16 @@ async def stream_camera_ip(session: Session, id_camera: int):
         (flag, encodedImage) = cv2.imencode(".jpg", imagem)
         yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + bytearray(encodedImage) + b'\r\n')
     #cameraIP = cv2.VideoCapture(f'rtsp://{camera.usuario}:{camera.senha}@{camera.ip_da_camera}/')
-    cameraIP = cv2.VideoCapture(0)  # WebCam
+    cameraIP = cv2.VideoCapture(0)  #Hardcoded WebCam
     if camera:
         while camera.estado == EstadoCamera.ligado:
             conectado, frame = cameraIP.read()
             if conectado:
                 try:
-                    greyFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                    facesDetectadas = detectorFace.detectMultiScale(greyFrame, scaleFactor=1.5, minSize=(30, 30))
+                    imagemCinza = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                    facesDetectadas = detectorFace.detectMultiScale(imagemCinza, scaleFactor=1.5, minSize=(30, 30))
                     for (x, y, l, a) in facesDetectadas:
-                        imagemFace = cv2.resize(greyFrame[y:y + a, x:x + l], (largura, altura))
+                        imagemFace = cv2.resize(imagemCinza[y:y + a, x:x + l], (largura, altura))
                         cv2.rectangle(frame, (x, y), (x + l, y + a), (0, 0, 255), 2)
                         id, confianca = reconhecedor.predict(imagemFace)
 
@@ -90,7 +91,7 @@ def read_root(id_camera:int,session: Session = Depends(get_db) ):
 
 @app.get("/iniciar_cameras")
 def iniciar():
-    camera_ip = cv2.VideoCapture("rtsp://admin:IFTM#un1@192.168.0.105/")
+    camera_ip = cv2.VideoCapture("rtsp://joaop:Jp103266@192.168.0.102/")
     while True:
         tem_imagem, frame = camera_ip.read()
         if tem_imagem:

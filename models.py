@@ -26,3 +26,10 @@ class Pessoas(Base):
     id_pessoa = Column(Integer, primary_key=True, index=True, autoincrement=True)
     nome = Column(String)
 
+class ControleCaptura(Base):
+    __tablename__ = "controle_captura"
+    id_captura = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    salvar_foto = Column(Integer)
+    flag_capturando = Column(Integer)
+
+

@@ -1,11 +1,15 @@
 from fastapi import APIRouter, Depends, BackgroundTasks
+from starlette.responses import StreamingResponse
+
 from banco_de_dados import get_db
 from sqlalchemy.orm import Session
+
+# from captura_web import capturar_fotos
+from captura_web import stream_cadastra_pessoa
 from schema import AdicionarAtualizarCamera, AdicionarAtualizarPessoa
 from crud import criar_camera, pegar_camera_por_id, pegar_todas_cameras, atualizar_camera, \
     deletar_camera, pegar_todas_pessoas, pegar_pessoa_por_id, atualizar_pessoa, criar_pessoa, \
     deletar_pessoa
-
 
 ##================ CAMERAS ========================================================
 from treinamento import treinarLBPH
@@ -111,12 +115,18 @@ def treinar_reconhecimento():
     except Exception as e:
         raise e
 
-@router.get("/cadastrarPessoa")
-def treinar_reconhecimento():
-    ## Chamada para gerar novo arquivo de reconhecimento treinado
+@router.get("/cadastrarPessoa/{id_camera}")
+def cadastrar_pessoa(id_camera: int, session: Session = Depends(get_db)):
+    try:
+        return StreamingResponse(stream_cadastra_pessoa(session=session, id_camera=id_camera),
+                                 media_type="multipart/x-mixed-replace;boundary=frame")
+    except Exception as e:
+        raise e
+
+@router.get("/capturarFoto")
+def capturar_foto():
     try:
 
-
-        return 200, "Requisição recebida"
+        return 200, "Requisicao rebecida"
     except Exception as e:
         raise e

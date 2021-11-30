@@ -117,3 +117,24 @@ def deletar_pessoa(session: Session, _id: int):
     session.commit()
 
     return
+
+def continuar_capturando(session: Session):
+    camera = session.query(Cameras).get(_id)
+
+    if camera is None:
+        raise CameraNaoExiste
+
+    return camera
+
+def atualizar_captura(session: Session, _id: int, info_update: AdicionarAtualizarCamera) -> Cameras:
+    camera = pegar_camera_por_id(session, _id)
+
+    if camera is None:
+        raise Exception
+
+    
+    session.commit()
+    session.refresh(camera)
+
+    return camera
+
