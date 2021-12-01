@@ -1,13 +1,11 @@
 import cv2
 
-from models import Pessoas
-
 detectorFace = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
 reconhecedor = cv2.face.LBPHFaceRecognizer_create()
 reconhecedor.read("classificadorLBPH.yml")
 largura, altura = 220, 220
 font = cv2.FONT_HERSHEY_COMPLEX_SMALL
-# cameraIP = cv2.VideoCapture(0) #WebCam
+#cameraIP = cv2.VideoCapture(0) #WebCam
 cameraIP = cv2.VideoCapture('rtsp://joaop:Jp103266@192.168.15.34/') #CameraIP
 
 pessoas = dict([('1', 'Joao Pedro'), ('2', 'Carolina'), ('3', 'Lucas'), ('4', 'Juliana'), ('5', 'Gabriel')])

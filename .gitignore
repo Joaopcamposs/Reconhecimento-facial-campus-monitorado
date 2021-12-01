@@ -1,5 +1,4 @@
-.ideia/
-__pycache__/
+.idea/
+__pycache__
 fotos/*
-captura.py
 script_banco.txt

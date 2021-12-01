@@ -1,6 +1,6 @@
 from typing import List
 from sqlalchemy.orm import Session
-from models import Cameras, Pessoas
+from models import Cameras, Pessoas, ControleCaptura
 from schema import AdicionarAtualizarCamera, AdicionarAtualizarPessoa
 
 
@@ -118,23 +118,33 @@ def deletar_pessoa(session: Session, _id: int):
 
     return
 
-def continuar_capturando(session: Session):
-    camera = session.query(Cameras).get(_id)
 
-    if camera is None:
-        raise CameraNaoExiste
+#====================================== CAPTURA ===========================
 
-    return camera
+# Function to get info of a particular camera
+def pegar_captura_por_id(session: Session, _id: int) -> ControleCaptura:
+    captura = session.query(ControleCaptura).get(_id)
 
-def atualizar_captura(session: Session, _id: int, info_update: AdicionarAtualizarCamera) -> Cameras:
-    camera = pegar_camera_por_id(session, _id)
-
-    if camera is None:
+    if captura is None:
         raise Exception
 
-    
-    session.commit()
-    session.refresh(camera)
+    return captura
 
-    return camera
+def salvar_foto_flag(session: Session, _id: int):
+    captura = pegar_captura_por_id(session, _id)
+    captura.salvar_foto = 1
+
+    session.commit()
+    session.refresh(captura)
+
+    return captura
+
+def resetar_foto_flag(session: Session, _id: int):
+    captura = pegar_captura_por_id(session, _id)
+    captura.salvar_foto = 0
+
+    session.commit()
+    session.refresh(captura)
+
+    return captura
 

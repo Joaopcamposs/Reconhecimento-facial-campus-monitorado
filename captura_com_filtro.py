@@ -6,8 +6,8 @@ from crud import pegar_todas_pessoas, criar_pessoa
 from schema import AdicionarAtualizarPessoa
 
 classificador = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
-cameraIP = cv2.VideoCapture(0) #WebCam
-#cameraIP = cv2.VideoCapture('rtsp://joaop:Jp103266@192.168.0.101/') #cameraIP
+#cameraIP = cv2.VideoCapture(0) #WebCam
+cameraIP = cv2.VideoCapture('rtsp://joaop:Jp103266@192.168.0.101/') #cameraIP
 font = cv2.FONT_HERSHEY_COMPLEX_SMALL
 engine = create_engine('mysql+pymysql://root:1234@localhost:3306/iftm')
 

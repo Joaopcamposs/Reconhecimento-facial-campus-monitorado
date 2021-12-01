@@ -9,7 +9,7 @@ from captura_web import stream_cadastra_pessoa
 from schema import AdicionarAtualizarCamera, AdicionarAtualizarPessoa
 from crud import criar_camera, pegar_camera_por_id, pegar_todas_cameras, atualizar_camera, \
     deletar_camera, pegar_todas_pessoas, pegar_pessoa_por_id, atualizar_pessoa, criar_pessoa, \
-    deletar_pessoa
+    deletar_pessoa, salvar_foto_flag
 
 ##================ CAMERAS ========================================================
 from treinamento import treinarLBPH
@@ -97,7 +97,7 @@ def nova_pessoa(background_tasks: BackgroundTasks, nova_pessoa: AdicionarAtualiz
 
 # API to delete a car info from the data base
 @router.delete("/pessoa/{pessoa_id}")
-def delete_camera(background_tasks: BackgroundTasks, pessoa_id: int, session: Session = Depends(get_db)):
+def delete_pessoa(background_tasks: BackgroundTasks, pessoa_id: int, session: Session = Depends(get_db)):
     try:
         background_tasks.add_task(deletar_pessoa, session, pessoa_id)
         return 200, "Requisição recebida"
@@ -115,18 +115,18 @@ def treinar_reconhecimento():
     except Exception as e:
         raise e
 
-@router.get("/cadastrarPessoa/{id_camera}")
-def cadastrar_pessoa(id_camera: int, session: Session = Depends(get_db)):
+@router.get("/cadastrarPessoa/{id_camera}&{nome_pessoa}")
+def cadastrar_pessoa(id_camera: int, nome_pessoa: str, session: Session = Depends(get_db)):
     try:
-        return StreamingResponse(stream_cadastra_pessoa(session=session, id_camera=id_camera),
+        return StreamingResponse(stream_cadastra_pessoa(session=session, id_camera=id_camera, nome_pessoa=nome_pessoa),
                                  media_type="multipart/x-mixed-replace;boundary=frame")
     except Exception as e:
         raise e
 
-@router.get("/capturarFoto")
-def capturar_foto():
+@router.post("/capturarFoto")
+def capturar_foto(session: Session = Depends(get_db)):
     try:
-
+        salvar_foto_flag(session, 1)
         return 200, "Requisicao rebecida"
     except Exception as e:
         raise e

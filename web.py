@@ -27,17 +27,14 @@ largura, altura = 220, 220
 
 
 def verificarPessoa(session: Session, id: int):
-
     ## Puxar do banco todos os nomes e ids cadastrados
     pessoas = pegar_todas_pessoas(session=session)
-
     for p in pessoas:
         if id == p.id_pessoa:
             return p.nome
 
 
 async def stream_camera_ip(session: Session, id_camera: int):
-    #Estanciar camera ip e pegar enderco
     imagem = None
     camera = None
     try:
@@ -85,7 +82,7 @@ async def stream_camera_ip(session: Session, id_camera: int):
 
 
 @app.get("/video/{id_camera}")
-def read_root(id_camera:int,session: Session = Depends(get_db) ):
+def reconhecimento_facial(id_camera:int, session: Session = Depends(get_db)):
     return StreamingResponse(stream_camera_ip(session=session, id_camera=id_camera),  media_type="multipart/x-mixed-replace;boundary=frame")
 
 

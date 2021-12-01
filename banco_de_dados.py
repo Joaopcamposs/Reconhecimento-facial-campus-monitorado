@@ -4,9 +4,9 @@ from sqlalchemy.orm import sessionmaker
 
 DATABASE_URL = "mysql+pymysql://root:1234@localhost:3306/iftm"
 #root é o usuário
-#1234 é a minha senha
-#3306 é a minha porta
-#iftm é o schema que eu to usando
+#1234 é a senha
+#3306 é a porta
+#iftm é o schema
 
 db_engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=db_engine)
