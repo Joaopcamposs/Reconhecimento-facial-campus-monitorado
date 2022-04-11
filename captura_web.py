@@ -46,7 +46,7 @@ async def stream_cadastra_pessoa(session: Session, id_camera: int, nome_pessoa: 
 
                     for (x, y, l, a) in facesDetectadas:
                         cv2.rectangle(frame, (x, y), (x + l, y + a), (0, 0, 255), 2)
-                        cv2.putText(frame, f'Luminosidade: {str(int(np.average(imagemCinza)))}', (x, y + (a + 30)),font, 1, (0, 0, 255))
+                        cv2.putText(frame, f'Luminosidade (min:110): {str(int(np.average(imagemCinza)))}', (x, y + (a + 30)),font, 1, (0, 0, 255))
                         #if cv2.waitKey(1) & 0xFF == ord('q'):  # tecla 'q' captura as fotos
                         if(captura.salvar_foto == 1):
                             if np.average(imagemCinza) > 110:  # captura apenas se a media de luminosidade for maior que 110

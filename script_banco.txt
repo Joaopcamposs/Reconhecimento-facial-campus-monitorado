@@ -1,0 +1,25 @@
+create database iftm;
+use iftm;
+
+create table cameras(
+    id_da_camera int auto_increment primary key,
+    usuario varchar(50),
+    ip_da_camera varchar(50),
+    senha varchar(50),
+    estado varchar(50)
+);
+
+create table pessoas(
+    id_pessoa int auto_increment primary key,
+    nome varchar(50)
+);
+
+create table controle_captura(
+    id_captura int,
+    salvar_foto int,
+);
+
+insert into controle_captura(id_captura, salvar_foto, flag_capturando)
+values (1, 0);
+
+//camera ip: "rtsp://joaop:Jp103266@192.168.0.102/"

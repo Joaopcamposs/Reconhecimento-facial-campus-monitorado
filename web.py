@@ -43,8 +43,8 @@ async def stream_camera_ip(session: Session, id_camera: int):
         imagem = cv2.imread("camera_nao_existe.jpg")
         (flag, encodedImage) = cv2.imencode(".jpg", imagem)
         yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + bytearray(encodedImage) + b'\r\n')
-    #cameraIP = cv2.VideoCapture(f'rtsp://{camera.usuario}:{camera.senha}@{camera.ip_da_camera}/')
-    cameraIP = cv2.VideoCapture(0)  #Hardcoded WebCam
+    cameraIP = cv2.VideoCapture(f'rtsp://{camera.usuario}:{camera.senha}@{camera.ip_da_camera}/')
+    #cameraIP = cv2.VideoCapture(0)  #Hardcoded WebCam
     if camera:
         while camera.estado == EstadoCamera.ligado:
             conectado, frame = cameraIP.read()
@@ -81,14 +81,16 @@ async def stream_camera_ip(session: Session, id_camera: int):
             print(e)
 
 
+#API endpoint to facial recognition stream
 @app.get("/video/{id_camera}")
 def reconhecimento_facial(id_camera:int, session: Session = Depends(get_db)):
     return StreamingResponse(stream_camera_ip(session=session, id_camera=id_camera),  media_type="multipart/x-mixed-replace;boundary=frame")
 
 
+#API endpoint to start background cameras
 @app.get("/iniciar_cameras")
-def iniciar():
-    camera_ip = cv2.VideoCapture("rtsp://joaop:Jp103266@192.168.0.102/")
+def iniciar_cameras_background():
+    camera_ip = cv2.VideoCapture("rtsp://joaop:Jp103266@192.168.0.109/")
     while True:
         tem_imagem, frame = camera_ip.read()
         if tem_imagem:

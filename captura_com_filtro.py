@@ -36,7 +36,7 @@ while(True):
 
     for (x, y, l, a) in facesDetectadas:
         cv2.rectangle(imagem, (x, y), (x + l, y + a), (0, 0, 255), 2)
-        cv2.putText(imagem, f'Luminosidade: {str(int(np.average(imagemCinza)))}', (x, y + (a + 30)), font, 1, (0, 0, 255))
+        cv2.putText(imagem, f'Luminosidade (min:110): {str(int(np.average(imagemCinza)))}', (x, y + (a + 30)), font, 1, (0, 0, 255))
         if cv2.waitKey(1) & 0xFF == ord('q'): #tecla 'q' captura as fotos
             if np.average(imagemCinza) > 110: #captura apenas se a media de luminosidade for maior que 110
                 imagemFace = cv2.resize(imagemCinza[y:y + a, x:x + l], (largura, altura))
