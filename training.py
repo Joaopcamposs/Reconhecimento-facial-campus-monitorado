@@ -2,8 +2,8 @@ import cv2
 import os
 import numpy as np
 
-def treinarLBPH():
 
+def treinarLBPH():
     lbph = cv2.face.LBPHFaceRecognizer_create()
 
     def getImagemComId():

@@ -16,10 +16,8 @@ create table pessoas(
 
 create table controle_captura(
     id_captura int,
-    salvar_foto int,
+    salvar_foto int
 );
 
-insert into controle_captura(id_captura, salvar_foto, flag_capturando)
-values (1, 0);
 
-//camera ip: "rtsp://joaop:Jp103266@192.168.0.102/"
+//camera ip: "rtsp://joaop:Jp103266@192.168.0.109/"

@@ -4,14 +4,14 @@ from models import Cameras, Pessoas, ControleCaptura
 from schema import AdicionarAtualizarCamera, AdicionarAtualizarPessoa
 
 
-##================ CAMERAS ========================================================
-
 # Function to get list of cameras info
 def pegar_todas_cameras(session: Session) -> List[Cameras]:
     return session.query(Cameras).all()
 
+
 class CameraNaoExiste(Exception):
     pass
+
 
 # Function to get info of a particular camera
 def pegar_camera_por_id(session: Session, _id: int) -> Cameras:
@@ -43,7 +43,6 @@ def atualizar_camera(session: Session, _id: int, info_update: AdicionarAtualizar
     camera.usuario = info_update.usuario
     camera.estado = info_update.estado
     camera.senha = info_update.senha
-    camera.estado = info_update.estado
     session.commit()
     session.refresh(camera)
 
@@ -63,14 +62,14 @@ def deletar_camera(session: Session, _id: int):
     return
 
 
-##================ PESSOAS ========================================================
-
 # Function to get list of pessoas info
 def pegar_todas_pessoas(session: Session) -> List[Pessoas]:
     return session.query(Pessoas).all()
 
+
 class PessoaNaoExiste(Exception):
     pass
+
 
 # Function to get info of a particular camera
 def pegar_pessoa_por_id(session: Session, _id: int) -> Pessoas:
@@ -119,8 +118,6 @@ def deletar_pessoa(session: Session, _id: int):
     return
 
 
-#====================================== CAPTURA ===========================
-
 # Function to get info of a particular camera
 def pegar_captura_por_id(session: Session, _id: int) -> ControleCaptura:
     captura = session.query(ControleCaptura).get(_id)
@@ -130,6 +127,8 @@ def pegar_captura_por_id(session: Session, _id: int) -> ControleCaptura:
 
     return captura
 
+
+# Function to set captura flag
 def salvar_foto_flag(session: Session, _id: int):
     captura = pegar_captura_por_id(session, _id)
     captura.salvar_foto = 1
@@ -139,6 +138,8 @@ def salvar_foto_flag(session: Session, _id: int):
 
     return captura
 
+
+# Function to reset captura flag
 def resetar_foto_flag(session: Session, _id: int):
     captura = pegar_captura_por_id(session, _id)
     captura.salvar_foto = 0
@@ -148,3 +149,31 @@ def resetar_foto_flag(session: Session, _id: int):
 
     return captura
 
+
+# Function to create database and tables
+def create_db():
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import sessionmaker
+    engine = create_engine('mysql+pymysql://root:password@iftm_db/')
+    Session = sessionmaker(engine)
+    with Session.begin() as session:
+        session.execute('CREATE DATABASE iftm;')
+        session.execute('use iftm;')
+        session.execute("""create table cameras(
+                        id_da_camera int auto_increment primary key,
+                        usuario varchar(50),
+                        ip_da_camera varchar(50),
+                        senha varchar(50),
+                        estado varchar(50)
+                        );""")
+        session.execute("""create table pessoas(
+                        id_pessoa int auto_increment primary key,
+                        nome varchar(50)
+                        );""")
+        session.execute("""create table controle_captura(
+                        id_captura int,
+                        salvar_foto int
+                        );""")
+        session.commit()
+
+    return "Banco Criado"
