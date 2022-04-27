@@ -3,26 +3,26 @@ import os
 import numpy as np
 
 
-def treinarLBPH():
+def trainLBPH():
     lbph = cv2.face.LBPHFaceRecognizer_create()
 
-    def getImagemComId():
-        caminhos = [os.path.join('fotos', f) for f in os.listdir('fotos')]
+    def getImageAndId():
+        paths = [os.path.join('pictures', f) for f in os.listdir('pictures')]
         faces = []
         ids = []
 
-        for caminhoImagem in caminhos:
-            imagemFace = cv2.cvtColor(cv2.imread(caminhoImagem), cv2.COLOR_BGR2GRAY)
-            id = int(os.path.split(caminhoImagem)[-1].split('.')[1])
+        for imagePath in paths:
+            face_image = cv2.cvtColor(cv2.imread(imagePath), cv2.COLOR_BGR2GRAY)
+            id = int(os.path.split(imagePath)[-1].split('.')[1])
             ids.append(id)
-            faces.append(imagemFace)
+            faces.append(face_image)
         return np.array(ids), faces
 
-    ids, faces = getImagemComId()
+    ids, faces = getImageAndId()
 
     print('Treinando...')
 
     lbph.train(faces, ids)
-    lbph.write('classificadorLBPH.yml')
+    lbph.write('classifierLBPH.yml')
 
     print('Treinamento concluido!')

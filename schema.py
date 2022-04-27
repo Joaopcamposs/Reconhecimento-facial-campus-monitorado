@@ -1,28 +1,28 @@
 from pydantic import BaseModel
-from models import EstadoCamera
+from models import CameraStatus
 
 
-class AdicionarAtualizarCamera(BaseModel):
-    usuario: str
-    ip_da_camera: str
-    senha: str
-    estado: EstadoCamera
+class CreateUpdateCamera(BaseModel):
+    user: str
+    camera_ip: str
+    password: str
+    status: CameraStatus
 
 
-class AtualizarCamera(AdicionarAtualizarCamera):
+class UpdateCamera(CreateUpdateCamera):
     id: int
 
     class Config:
         orm_mode = True
 
 
-class AdicionarAtualizarPessoa(BaseModel):
-    id_pessoa: int
-    nome: str
+class CreateUpdatePerson(BaseModel):
+    person_id: int
+    name: str
 
 
-class AtualizarPessoa(AdicionarAtualizarCamera):
-    id_pessoa: int
+class UpdatePerson(CreateUpdatePerson):
+    person_id: int
 
     class Config:
         orm_mode = True

@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 
 DATABASE_URL = "mysql+pymysql://root:password@iftm_db/iftm"
 # root é o usuário
-# password é a senha
+# password é a password
 # iftm_db é a conexão
 # iftm é o database
 

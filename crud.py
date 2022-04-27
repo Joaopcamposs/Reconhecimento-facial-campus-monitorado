@@ -1,48 +1,48 @@
 from typing import List
 from sqlalchemy.orm import Session
-from models import Cameras, Pessoas, ControleCaptura
-from schema import AdicionarAtualizarCamera, AdicionarAtualizarPessoa
+from models import Camera, Person, Controller
+from schema import CreateUpdateCamera, CreateUpdatePerson
 
 
 # Function to get list of cameras info
-def pegar_todas_cameras(session: Session) -> List[Cameras]:
-    return session.query(Cameras).all()
+def get_all_cameras(session: Session) -> List[Camera]:
+    return session.query(Camera).all()
 
 
-class CameraNaoExiste(Exception):
+class CameraNotFound(Exception):
     pass
 
 
 # Function to get info of a particular camera
-def pegar_camera_por_id(session: Session, _id: int) -> Cameras:
-    camera = session.query(Cameras).get(_id)
+def get_camera_by_id(session: Session, _id: int) -> Camera:
+    camera = session.query(Camera).get(_id)
 
     if camera is None:
-        raise CameraNaoExiste
+        raise CameraNotFound
 
     return camera
 
 
 # Function to add a new camera info to the database
-def criar_camera(session: Session, camera_info: AdicionarAtualizarCamera) -> Cameras:
-    camera_nova = Cameras(**camera_info.dict())
-    session.add(camera_nova)
+def create_camera(session: Session, camera_info: CreateUpdateCamera) -> Camera:
+    new_camera = Camera(**camera_info.dict())
+    session.add(new_camera)
     session.commit()
-    session.refresh(camera_nova)
-    return camera_nova
+    session.refresh(new_camera)
+    return new_camera
 
 
 # Function to update details of the camera
-def atualizar_camera(session: Session, _id: int, info_update: AdicionarAtualizarCamera) -> Cameras:
-    camera = pegar_camera_por_id(session, _id)
+def update_camera(session: Session, _id: int, info_update: CreateUpdateCamera) -> Camera:
+    camera = get_camera_by_id(session, _id)
 
     if camera is None:
         raise Exception
 
-    camera.ip_da_camera = info_update.ip_da_camera
-    camera.usuario = info_update.usuario
-    camera.estado = info_update.estado
-    camera.senha = info_update.senha
+    camera.camera_ip = info_update.camera_ip
+    camera.user = info_update.user
+    camera.status = info_update.status
+    camera.password = info_update.password
     session.commit()
     session.refresh(camera)
 
@@ -50,8 +50,8 @@ def atualizar_camera(session: Session, _id: int, info_update: AdicionarAtualizar
 
 
 # Function to delete a camera info from the db
-def deletar_camera(session: Session, _id: int):
-    camera_info = pegar_camera_por_id(session, _id)
+def remove_camera(session: Session, _id: int):
+    camera_info = get_camera_by_id(session, _id)
 
     if camera_info is None:
         raise Exception
@@ -62,92 +62,92 @@ def deletar_camera(session: Session, _id: int):
     return
 
 
-# Function to get list of pessoas info
-def pegar_todas_pessoas(session: Session) -> List[Pessoas]:
-    return session.query(Pessoas).all()
+# Function to get list of persons
+def get_all_persons(session: Session) -> List[Person]:
+    return session.query(Person).all()
 
 
-class PessoaNaoExiste(Exception):
+class PersonNotFound(Exception):
     pass
 
 
-# Function to get info of a particular camera
-def pegar_pessoa_por_id(session: Session, _id: int) -> Pessoas:
-    pessoa = session.query(Pessoas).get(_id)
+# Function to get info of a particular person
+def get_person_by_id(session: Session, _id: int) -> Person:
+    pessoa = session.query(Person).get(_id)
 
     if pessoa is None:
-        raise PessoaNaoExiste
+        raise PersonNotFound
 
     return pessoa
 
 
-# Function to add a new camera info to the database
-def criar_pessoa(session: Session, pessoa_info: AdicionarAtualizarPessoa) -> Pessoas:
-    pessoa_nova = Pessoas(**pessoa_info.dict())
-    session.add(pessoa_nova)
+# Function to add a new person info to the database
+def create_person(session: Session, person_info: CreateUpdatePerson) -> Person:
+    new_person = Person(**person_info.dict())
+    session.add(new_person)
     session.commit()
-    session.refresh(pessoa_nova)
-    return pessoa_nova
+    session.refresh(new_person)
+    return new_person
 
 
-# Function to update details of the camera
-def atualizar_pessoa(session: Session, _id: int, info_update: AdicionarAtualizarPessoa) -> Pessoas:
-    pessoa = pegar_pessoa_por_id(session, _id)
+# Function to update details of the person
+def update_person(session: Session, _id: int, info_update: CreateUpdatePerson) -> Person:
+    person = get_person_by_id(session, _id)
 
-    if pessoa is None:
+    if person is None:
         raise Exception
 
-    pessoa.id_pessoa = info_update.id_pessoa
-    pessoa.nome = info_update.nome
+    person.person_id = info_update.person_id
+    person.name = info_update.name
     session.commit()
-    session.refresh(pessoa)
+    session.refresh(person)
 
-    return pessoa
+    return person
 
 
-# Function to delete a camera info from the db
-def deletar_pessoa(session: Session, _id: int):
-    pessoa_info = pegar_pessoa_por_id(session, _id)
+# Function to delete a person from the db
+def remove_person(session: Session, _id: int):
+    person_info = get_person_by_id(session, _id)
 
-    if pessoa_info is None:
+    if person_info is None:
         raise Exception
 
-    session.delete(pessoa_info)
+    session.delete(person_info)
     session.commit()
 
     return
 
 
-# Function to get info of a particular camera
-def pegar_captura_por_id(session: Session, _id: int) -> ControleCaptura:
-    captura = session.query(ControleCaptura).get(_id)
+# Function to get info of a particular capture
+async def get_capture_by_id(session: Session, _id: int) -> Controller:
+    capture = session.query(Controller).get(_id)
 
-    if captura is None:
+    if capture is None:
         raise Exception
 
-    return captura
+    return await capture
 
 
 # Function to set captura flag
-def salvar_foto_flag(session: Session, _id: int):
-    captura = pegar_captura_por_id(session, _id)
-    captura.salvar_foto = 1
+async def set_capture_flag(session: Session, _id: int):
+    capture = await get_capture_by_id(session, _id)
+    capture.save_picture = 1
 
     session.commit()
-    session.refresh(captura)
+    session.refresh(capture)
 
-    return captura
+    return await capture
 
 
 # Function to reset captura flag
-def resetar_foto_flag(session: Session, _id: int):
-    captura = pegar_captura_por_id(session, _id)
-    captura.salvar_foto = 0
+async def reset_capture_flag(session: Session, _id: int):
+    capture = await get_capture_by_id(session, _id)
+    capture.save_picture = 0
 
     session.commit()
-    session.refresh(captura)
+    session.refresh(capture)
 
-    return captura
+    return await capture
 
 
 # Function to create database and tables
@@ -156,24 +156,29 @@ def create_db():
     from sqlalchemy.orm import sessionmaker
     engine = create_engine('mysql+pymysql://root:password@iftm_db/')
     Session = sessionmaker(engine)
-    with Session.begin() as session:
-        session.execute('CREATE DATABASE iftm;')
-        session.execute('use iftm;')
-        session.execute("""create table cameras(
-                        id_da_camera int auto_increment primary key,
-                        usuario varchar(50),
-                        ip_da_camera varchar(50),
-                        senha varchar(50),
-                        estado varchar(50)
-                        );""")
-        session.execute("""create table pessoas(
-                        id_pessoa int auto_increment primary key,
-                        nome varchar(50)
-                        );""")
-        session.execute("""create table controle_captura(
-                        id_captura int,
-                        salvar_foto int
-                        );""")
-        session.commit()
+    try:
+        with Session.begin() as session:
+            session.execute('CREATE DATABASE iftm;')
+            session.execute('use iftm;')
+            session.execute("""create table camera(
+                            camera_id int auto_increment primary key,
+                            user varchar(50),
+                            camera_ip varchar(50),
+                            password varchar(50),
+                            status varchar(50)
+                            );""")
+            session.execute("""create table person(
+                            person_id int auto_increment primary key,
+                            name varchar(50)
+                            );""")
+            session.execute("""create table controller(
+                            capture_id int primary key,
+                            save_picture int
+                            );""")
+            session.execute("""insert into controller(capture_id, save_picture)
+                            values (1, 0);""")
+            session.commit()
+    except:
+        return "Something went wrong"
 
     return "Banco Criado"
