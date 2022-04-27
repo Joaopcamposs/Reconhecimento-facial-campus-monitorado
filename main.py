@@ -2,9 +2,9 @@ from fastapi import FastAPI
 import api
 from crud import create_db
 
-# comando para iniciar o servidor da API
+# command to start the API server
 # uvicorn main:app --workers 4
-# http://127.0.0.1:8000/docs
+# SWAGGER DOCS: http://127.0.0.1:8004/docs
 
 
 app = FastAPI()

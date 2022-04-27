@@ -4,7 +4,7 @@ from models import CameraStatus
 from sqlalchemy.orm import Session
 from crud import CameraNotFound
 
-# Parametros para reconhecimento facial
+# Parameters for facial recognition
 faceDetector = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 recognizer.read("classifierLBPH.yml")
@@ -13,7 +13,6 @@ width, height = 220, 220
 
 
 def verifyPerson(session: Session, id: int):
-    # Puxar do banco todos os nomes e ids cadastrados
     persons = get_all_persons(session=session)
     for p in persons:
         if id == p.person_id:
@@ -29,11 +28,11 @@ async def stream_facial_recognition(session: Session, id_camera: int):
         image = cv2.imread("camera_nao_encontrada.jpg")
         (flag, encodedImage) = cv2.imencode(".jpg", image)
         yield b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + bytearray(encodedImage) + b'\r\n'
-    camera_ip = cv2.VideoCapture(f'rtsp://{camera.user}:{camera.password}@{camera.camera_ip}/')
+    cameraIP = cv2.VideoCapture(f'rtsp://{camera.user}:{camera.password}@{camera.camera_ip}/')
     # cameraIP = cv2.VideoCapture(0)  #Hardcoded WebCam
     if camera:
         while camera.status == CameraStatus.on:
-            connected, frame = camera_ip.read()
+            connected, frame = cameraIP.read()
             if connected:
                 try:
                     gray_image = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -43,15 +42,16 @@ async def stream_facial_recognition(session: Session, id_camera: int):
                         cv2.rectangle(frame, (x, y), (x + l, y + a), (0, 0, 255), 2)
                         id, trust = recognizer.predict(face_image)
 
-                        # Verificar pessoa
                         name = verifyPerson(session, id)
 
                         cv2.putText(frame, name, (x, y + (a + 30)), font, 2, (0, 0, 255))
                         cv2.putText(frame, str(f'Confianca: {round(trust, 2)}%'), (x, y + (a + 50)), font, 1,
                                     (0, 0, 255))
-                    # Redimensionar imagem
-                    frame_resized = cv2.resize(frame, (1280, 720), interpolation=cv2.INTER_AREA)
-                    (flag, encodedImage) = cv2.imencode(".jpg", frame_resized)
+
+                    # resize image (optional)
+                    frame = cv2.resize(frame, (1280, 720), interpolation=cv2.INTER_AREA)
+
+                    (flag, encodedImage) = cv2.imencode(".jpg", frame)
                     yield b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + bytearray(encodedImage) + b'\r\n'
                 except Exception as e:
                     print(e)

@@ -2,27 +2,30 @@ from pydantic import BaseModel
 from models import CameraStatus
 
 
-class CreateUpdateCamera(BaseModel):
+# TO support creation and update APIs
+class CreateAndUpdateCamera(BaseModel):
     user: str
     camera_ip: str
     password: str
     status: CameraStatus
 
 
-class UpdateCamera(CreateUpdateCamera):
+# TO support list and get APIs
+class Cameras(CreateAndUpdateCamera):
     id: int
 
     class Config:
         orm_mode = True
 
 
-class CreateUpdatePerson(BaseModel):
+# TO support creation and update APIs
+class CreateAndUpdatePerson(BaseModel):
     person_id: int
     name: str
 
 
-class UpdatePerson(CreateUpdatePerson):
-    person_id: int
+# TO support list and get APIs
+class Persons(CreateAndUpdatePerson):
 
     class Config:
         orm_mode = True

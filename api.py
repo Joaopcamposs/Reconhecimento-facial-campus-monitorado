@@ -4,9 +4,8 @@ from fastapi import APIRouter, Depends, BackgroundTasks
 from starlette.responses import StreamingResponse
 from database import get_db
 from sqlalchemy.orm import Session
-
 from pictures_capture import stream_pictures_capture
-from schema import CreateUpdateCamera, CreateUpdatePerson
+from schema import CreateAndUpdateCamera, CreateAndUpdatePerson
 from crud import create_camera, get_camera_by_id, get_all_cameras, update_camera, \
     remove_camera, get_all_persons, get_person_by_id, update_person, create_person, \
     remove_person, set_capture_flag
@@ -28,7 +27,7 @@ def pegar_info_camera(camera_id: int, session: Session = Depends(get_db)):
 
 # API endpoint to update a existing camera info
 @app.put("/camera/{camera_id}")
-def atualizar_info_camera(camera_id: int, new_info: CreateUpdateCamera, background_tasks: BackgroundTasks,
+def atualizar_info_camera(camera_id: int, new_info: CreateAndUpdateCamera, background_tasks: BackgroundTasks,
                           session: Session = Depends(get_db), ):
     try:
         background_tasks.add_task(update_camera, session, camera_id, new_info)
@@ -47,7 +46,7 @@ def listar_cameras(session: Session = Depends(get_db)):
 
 # API endpoint to add a camera to the database
 @app.post("/camera")
-def cadastrar_camera(background_tasks: BackgroundTasks, new_camera: CreateUpdateCamera,
+def cadastrar_camera(background_tasks: BackgroundTasks, new_camera: CreateAndUpdateCamera,
                      session: Session = Depends(get_db)):
     try:
         background_tasks.add_task(create_camera, session, new_camera)
@@ -78,7 +77,7 @@ def pegar_info_pessoa(person_id: int, session: Session = Depends(get_db)):
 
 # API endpoint to update a existing pessoa info
 @app.put("/pessoa/{person_id}")
-def atualizar_info_pessoa(person_id: int, new_info: CreateUpdatePerson, background_tasks: BackgroundTasks,
+def atualizar_info_pessoa(person_id: int, new_info: CreateAndUpdatePerson, background_tasks: BackgroundTasks,
                           session: Session = Depends(get_db), ):
     try:
         background_tasks.add_task(update_person, session, person_id, new_info)
@@ -97,7 +96,7 @@ def listar_pessoas(session: Session = Depends(get_db)):
 
 # API endpoint to add a pessoa to the database
 @app.post("/pessoa")
-def cadastrar_pessoa(background_tasks: BackgroundTasks, new_person: CreateUpdatePerson,
+def cadastrar_pessoa(background_tasks: BackgroundTasks, new_person: CreateAndUpdatePerson,
                      session: Session = Depends(get_db)):
     try:
         background_tasks.add_task(create_person, session, new_person)
@@ -135,7 +134,7 @@ def reconhecimento_facial(camera_id: int, session: Session = Depends(get_db)):
 
 # API endpoint to stream and catch pictures
 @app.get("/fotos/{camera_id}&{nome_pessoa}")
-def capturar_fotos_pessoa(camera_id: int, nome_pessoa: str, session: Session = Depends(get_db)):
+def capturar_fotos(camera_id: int, nome_pessoa: str, session: Session = Depends(get_db)):
     try:
         return StreamingResponse(stream_pictures_capture(session=session, camera_id=camera_id,
                                                          person_name=nome_pessoa),
@@ -149,7 +148,7 @@ def capturar_fotos_pessoa(camera_id: int, nome_pessoa: str, session: Session = D
 def capturar(session: Session = Depends(get_db)):
     try:
         set_capture_flag(session, 1)
-        return 200, "Requisicao rebecida"
+        return 200, "Requisicao recebida"
     except Exception as e:
         raise e
 
@@ -162,5 +161,5 @@ def iniciar_cameras_background(session: Session = Depends(get_db)):
     while True:
         image_ok, frame = camera_ip.read()
         if image_ok:
-            print("rodando em background")
+            print("running on background")
         sleep(30)

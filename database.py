@@ -2,11 +2,13 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-DATABASE_URL = "mysql+pymysql://root:password@iftm_db/iftm"
-# root é o usuário
-# password é a password
-# iftm_db é a conexão
-# iftm é o database
+# DATABASE_URL = "mysql+pymysql://root:@localhost:3307/iftm"  # local
+DATABASE_URL = "mysql+pymysql://root:password@iftm_db/iftm"  # docker
+
+# root is the mysql user
+# password is mysql password
+# iftm_db is the connection
+# iftm is the database (schema)
 
 db_engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=db_engine)

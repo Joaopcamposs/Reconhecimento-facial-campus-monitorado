@@ -1,10 +1,10 @@
 from typing import List
 from sqlalchemy.orm import Session
 from models import Camera, Person, Controller
-from schema import CreateUpdateCamera, CreateUpdatePerson
+from schema import CreateAndUpdateCamera, CreateAndUpdatePerson
 
 
-# Function to get list of cameras info
+# Function to get list of cameras
 def get_all_cameras(session: Session) -> List[Camera]:
     return session.query(Camera).all()
 
@@ -23,8 +23,8 @@ def get_camera_by_id(session: Session, _id: int) -> Camera:
     return camera
 
 
-# Function to add a new camera info to the database
-def create_camera(session: Session, camera_info: CreateUpdateCamera) -> Camera:
+# Function to add a new camera to the database
+def create_camera(session: Session, camera_info: CreateAndUpdateCamera) -> Camera:
     new_camera = Camera(**camera_info.dict())
     session.add(new_camera)
     session.commit()
@@ -33,7 +33,7 @@ def create_camera(session: Session, camera_info: CreateUpdateCamera) -> Camera:
 
 
 # Function to update details of the camera
-def update_camera(session: Session, _id: int, info_update: CreateUpdateCamera) -> Camera:
+def update_camera(session: Session, _id: int, info_update: CreateAndUpdateCamera) -> Camera:
     camera = get_camera_by_id(session, _id)
 
     if camera is None:
@@ -49,7 +49,7 @@ def update_camera(session: Session, _id: int, info_update: CreateUpdateCamera) -
     return camera
 
 
-# Function to delete a camera info from the db
+# Function to delete a camera from the db
 def remove_camera(session: Session, _id: int):
     camera_info = get_camera_by_id(session, _id)
 
@@ -81,8 +81,8 @@ def get_person_by_id(session: Session, _id: int) -> Person:
     return pessoa
 
 
-# Function to add a new person info to the database
-def create_person(session: Session, person_info: CreateUpdatePerson) -> Person:
+# Function to add a new person to the database
+def create_person(session: Session, person_info: CreateAndUpdatePerson) -> Person:
     new_person = Person(**person_info.dict())
     session.add(new_person)
     session.commit()
@@ -91,7 +91,7 @@ def create_person(session: Session, person_info: CreateUpdatePerson) -> Person:
 
 
 # Function to update details of the person
-def update_person(session: Session, _id: int, info_update: CreateUpdatePerson) -> Person:
+def update_person(session: Session, _id: int, info_update: CreateAndUpdatePerson) -> Person:
     person = get_person_by_id(session, _id)
 
     if person is None:
@@ -118,36 +118,36 @@ def remove_person(session: Session, _id: int):
     return
 
 
-# Function to get info of a particular capture
-async def get_capture_by_id(session: Session, _id: int) -> Controller:
-    capture = session.query(Controller).get(_id)
+# Function to get info of controller of captures
+def get_controller_by_id(session: Session, _id: int) -> Controller:
+    controller = session.query(Controller).get(_id)
 
-    if capture is None:
+    if controller is None:
         raise Exception
 
-    return await capture
+    return controller
 
 
 # Function to set captura flag
-async def set_capture_flag(session: Session, _id: int):
-    capture = await get_capture_by_id(session, _id)
-    capture.save_picture = 1
+def set_capture_flag(session: Session, _id: int):
+    controller = get_controller_by_id(session, _id)
+    controller.save_picture = 1
 
     session.commit()
-    session.refresh(capture)
+    session.refresh(controller)
 
-    return await capture
+    return controller
 
 
 # Function to reset captura flag
-async def reset_capture_flag(session: Session, _id: int):
-    capture = await get_capture_by_id(session, _id)
-    capture.save_picture = 0
+def reset_capture_flag(session: Session, _id: int):
+    controller = get_controller_by_id(session, _id)
+    controller.save_picture = 0
 
     session.commit()
-    session.refresh(capture)
+    session.refresh(controller)
 
-    return await capture
+    return controller
 
 
 # Function to create database and tables
@@ -181,4 +181,4 @@ def create_db():
     except:
         return "Something went wrong"
 
-    return "Banco Criado"
+    return "created database"

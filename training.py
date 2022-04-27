@@ -20,9 +20,9 @@ def trainLBPH():
 
     ids, faces = getImageAndId()
 
-    print('Treinando...')
+    print('Training...')
 
     lbph.train(faces, ids)
     lbph.write('classifierLBPH.yml')
 
-    print('Treinamento concluido!')
+    print('Training completed!')

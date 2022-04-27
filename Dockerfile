@@ -15,7 +15,7 @@ RUN apt-get install ffmpeg libsm6 libxext6  -y
 # copy project
 COPY . .
 
-# expose the 3000 port from the localhost system
+# expose the 8004 port from the localhost system
 EXPOSE 8004
 
 # run app

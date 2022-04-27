@@ -9,8 +9,9 @@
 <h2>Instalação com docker</h2>
 <p>Clonar o repositório: https://github.com/Joaopcamposs/Reconhecimento_facial_campus_monitorado</p>
 <p>Entrar na pasta: cd Reconhecimento_facial_campus_monitorado</p>
-<p>Utilizar o comando: docker-compose up db -d --build</p>
-<p>Utilizar o comando: docker-compose up api -d --build</p>
+<p>Utilizar o comando: docker-compose build db</p>
+<p>Utilizar o comando: docker-compose up -d db</p>
+<p>Utilizar o comando: docker-compose up -d --build</p>
 
 <h2>Acessos</h2>
 <p>API Swagger: http://localhost:8004/docs</p>
